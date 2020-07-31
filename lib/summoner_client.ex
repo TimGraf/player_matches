@@ -22,13 +22,8 @@ defmodule SummonerClient do
         api_key = Application.fetch_env!(:player_matches, :api_key)
         headers = ["X-Riot-Token": api_key]
 
-        Logger.debug("URL: #{url}")
-        Logger.debug("API Key: #{api_key}")
-        Logger.debug("Headers: #{headers |> Enum.map_join("&", fn {k, v} -> "#{k}: #{v}" end)}")
-
         case HTTPoison.get(url, headers) do
             {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-                Logger.debug("Response: #{body}")
                 tournaments = process_tournament_response(body)
                 {:ok, tournaments}
             {:ok, %HTTPoison.Response{status_code: status_code, body: body}} ->
@@ -43,11 +38,7 @@ defmodule SummonerClient do
     @doc """
     """
     def process_tournament_response(response) do
-        tournament_structs = Poison.decode!(response, as: [%Tournament{schedule: [%Schedule{}]}])
-
-        tournament_structs |> inspect() |> Logger.debug()
-
-        tournament_structs
+        Poison.decode!(response, as: [%Tournament{schedule: [%Schedule{}]}])
     end
 
     @doc """
@@ -57,14 +48,9 @@ defmodule SummonerClient do
         api_key = Application.fetch_env!(:player_matches, :api_key)
         headers = ["X-Riot-Token": api_key]
         options = [params: [beginIndex: 0, endIndex: n]]
-
-        Logger.debug("Region: #{region}")
-        Logger.debug("Account ID: #{account_id}")
-        Logger.debug("Matches: #{n}")
         
         case HTTPoison.get(url, headers, options) do
             {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-                Logger.debug("Response: #{body}")
                 matches = process_summoner_matches(body)
                 {:ok, matches}
             {:ok, %HTTPoison.Response{status_code: status_code, body: body}} ->
@@ -79,11 +65,7 @@ defmodule SummonerClient do
     @doc """
     """
     def process_summoner_matches(response) do
-        matches_struct = Poison.decode!(response, as: %MatchList{})
-
-        matches_struct |> inspect() |> Logger.debug()
-
-        matches_struct
+        Poison.decode!(response, as: %MatchList{})
     end
 
     @doc """
@@ -92,14 +74,9 @@ defmodule SummonerClient do
         url = @protocol <> "#{region}." <> @base_url <> "/lol/summoner/v4/summoners/by-name/" <> sommoner_name
         api_key = Application.fetch_env!(:player_matches, :api_key)
         headers = ["X-Riot-Token": api_key]
-
-        Logger.debug("API Key: #{api_key}")
-        Logger.debug("Region: #{region}")
-        Logger.debug("Summoner Name: #{sommoner_name}")
         
         case HTTPoison.get(url, headers) do
             {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-                Logger.debug("Response: #{body}")
                 summoner = process_summoner_response(body)
                 {:ok, summoner}
             {:ok, %HTTPoison.Response{status_code: status_code, body: body}} ->
@@ -114,11 +91,7 @@ defmodule SummonerClient do
     @doc """
     """
     def process_summoner_response(response) do
-        summoner_struct = Poison.decode!(response, as: %Summoner{})
-
-        summoner_struct |> inspect() |> Logger.debug()
-
-        summoner_struct
+        Poison.decode!(response, as: %Summoner{})
     end
 
     @doc """
@@ -127,14 +100,9 @@ defmodule SummonerClient do
         url = @protocol <> "#{region}." <> @base_url <> "/lol/match/v4/matches/#{match_id}"
         api_key = Application.fetch_env!(:player_matches, :api_key)
         headers = ["X-Riot-Token": api_key]
-
-        Logger.debug("API Key: #{api_key}")
-        Logger.debug("Region: #{region}")
-        Logger.debug("Match ID: #{match_id}")
         
         case HTTPoison.get(url, headers) do
             {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-                Logger.debug("Response: #{body}")
                 match = process_match_response(body)
                 {:ok, match}
             {:ok, %HTTPoison.Response{status_code: status_code, body: body}} ->
@@ -149,10 +117,6 @@ defmodule SummonerClient do
     @doc """
     """
     def process_match_response(response) do
-        match_struct = Poison.decode!(response, as: %SimpleMatch{})
-
-        match_struct |> inspect() |> Logger.debug()
-
-        match_struct
+        Poison.decode!(response, as: %SimpleMatch{})
     end
 end

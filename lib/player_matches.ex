@@ -52,20 +52,16 @@ defmodule PlayerMatches do
         Logger.info("PlayerMatches: monitoring players in matches ...")
 
         player_set = MapSet.new(List.flatten(Enum.map(matches, fn match -> 
-            Logger.debug("PlayerMatches: getting players for match ID: #{match.gameId}")
             case SummonerClient.get_match_details(region, match.gameId) do
-                {:ok, match_details} ->
-                    Enum.map(match_details.participantIdentities, fn player ->
-                        Logger.info("Player Nmae: #{player.summonerName}")
-                        player
-                    end)
-                {:error, error} ->
-                    Logger.error("Error getting matches.")
+                {:ok, match_details} -> Enum.map(match_details.participantIdentities, fn player -> player end)
+                {:error, error} -> nil
             end
         end)))
 
         Logger.info("#{MapSet.size(player_set)} Players")
 
-        player_set |> inspect() |> Logger.info()
+        Enum.map(player_set, fn player ->
+            Logger.info("Player Name: #{player.summonerName}")
+        end)
     end
 end
