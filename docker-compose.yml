@@ -1,0 +1,9 @@
+version: '3.2'
+services:
+  app:
+    build: .
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+    command: tail -F anything
