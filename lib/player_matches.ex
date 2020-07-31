@@ -24,10 +24,10 @@ defmodule PlayerMatches do
                 case SummonerClient.get_last_n_matches(region, player.accountId, 5) do
                     {:ok, match_list} ->
                         monitor_players_in_matches(region, match_list.matches)
-                    {:error, error} ->
+                    {:error, _error} ->
                         Logger.error("Error getting matches.")
                 end
-            {:error, error} ->
+            {:error, _error} ->
                 Logger.error("Error getting summoner.")
         end
     end
@@ -54,7 +54,7 @@ defmodule PlayerMatches do
         player_set = MapSet.new(List.flatten(Enum.map(matches, fn match -> 
             case SummonerClient.get_match_details(region, match.gameId) do
                 {:ok, match_details} -> Enum.map(match_details.participantIdentities, fn player -> player end)
-                {:error, error} -> nil
+                {:error, _error} -> nil
             end
         end)))
 
