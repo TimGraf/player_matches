@@ -22,13 +22,10 @@ defmodule PlayerMatches do
         case SummonerClient.get_summoner_by_name(region, summoner_name) do
             {:ok, player } -> 
                 case SummonerClient.get_last_n_matches(region, player.accountId, 5) do
-                    {:ok, match_list} ->
-                        monitor_players_in_matches(region, match_list.matches)
-                    {:error, _error} ->
-                        Logger.error("Error getting matches.")
+                    {:ok, match_list} -> monitor_players_in_matches(region, match_list.matches)
+                    {:error, _error} -> Logger.error("Error getting matches.")
                 end
-            {:error, _error} ->
-                Logger.error("Error getting summoner.")
+            {:error, _error} -> Logger.error("Error getting summoner.")
         end
     end
 
