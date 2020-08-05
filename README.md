@@ -21,6 +21,9 @@ be found at [https://hexdocs.pm/player_matches](https://hexdocs.pm/player_matche
 
 
 ## Requirements
+Example project using the Riot Games API
+
+[Riot Games API](https://developer.riotgames.com/)
 
 Create an application that has one method:
 
